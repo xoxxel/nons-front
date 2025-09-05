@@ -1,0 +1,45 @@
+{
+  "name": "nons",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.21",
+    "@mui/styles": "^6.1.2",
+    "@plaiceholder/next": "^3.0.0",
+    "axios": "^1.7.2",
+    "date-fns-jalali": "^4.1.0-0",
+    "emoji-picker-react": "^4.11.1",
+    "jalali-moment": "^3.3.11",
+    "next": "14.2.4",
+    "nextjs-toploader": "^1.6.12",
+    "plaiceholder": "^3.0.0",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hot-toast": "^2.4.1",
+    "react-intersection-observer": "^9.13.0",
+    "react-multi-date-picker": "^4.5.2",
+    "react-spinners": "^0.14.1",
+    "socket.io-client": "^4.8.1",
+    "swiper": "^11.1.4"
+  },
+  "devDependencies": {
+    "@types/connect": "^3.4.38",
+    "@types/estree": "^1.0.6",
+    "@types/json-schema": "^7.0.15",
+    "@types/mysql": "^2.15.26",
+    "@types/node": "^20",
+    "@types/pg": "^8.11.10",
+    "@types/pg-pool": "^2.0.6",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
+  }
+}

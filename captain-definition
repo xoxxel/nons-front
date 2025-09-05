@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 2,
+  "dockerfilePath": "./Dockerfile",
+  "build": {
+    "buildCommand": "pnpm run build",
+    "dockerIgnore": [".git", "node_modules"]
+  },
+  "run": {
+    "port": 4173,
+    "cmd": ["serve", "-s", ".vitepress/dist", "-l", "4173"]
+  }
+}

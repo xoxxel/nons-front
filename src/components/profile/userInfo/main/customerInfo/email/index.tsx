@@ -1,0 +1,208 @@
+"use client";
+import { Box, Button, Typography } from "@mui/material";
+import InfoButton from "../../infoButton";
+import { useContext, useEffect, useRef, useState } from "react";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import Cookies from "@/utils/cookie";
+import CountDown from "@/components/login/otp/countDown";
+import { ShopStepContext } from "@/context/shopStepsProvider";
+import toast from "react-hot-toast";
+
+const EmailInput = ({ currentEmail }: { currentEmail: string }) => {
+  const [email, setEmail] = useState(currentEmail ?? "");
+  const [otp, setOtp] = useState("");
+  const [isOTP, setIsOTP] = useState(false);
+  const [isEdited, setIsEdited] = useState(false);
+  const { focusingStep, setFocusingStep } = useContext(ShopStepContext);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    setIsEdited(true);
+    setOtp("");
+  };
+
+  const handleSubmit = () => {
+    if (!isEdited) {
+      inputRef.current?.focus();
+      setIsEdited(true);
+    } else {
+      axios
+        .post(
+          `${process.env.NEXT_PUBLIC_API}/user/send-otp-change-email/`,
+          {
+            email,
+          },
+          { headers: { Authorization: `Bearer ${Cookies.get("access")}` } }
+        )
+        .then((res) =>{
+          handleSuccessfulNumberSubmit(res);
+          if (res?.data?.msg) {
+            toast.error(res?.data?.msg)
+          }
+          
+        })
+        .catch((err) => handleNumberSubmitError(err));
+    }
+  };
+
+  const handleSuccessfulNumberSubmit = (res: AxiosResponse) => {
+    setIsOTP(true);
+  };
+  const handleNumberSubmitError = (
+    error: AxiosError<{ msg?: string }>
+  ) => {
+    if (error?.response?.data?.msg) {
+      toast.error(error?.response?.data?.msg);
+    } else {
+      toast.error("خطای سرور");
+    }
+  };
+
+  const handleOTPComplete = () => {
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API}/user/change-email/`,
+        {
+          email,
+          otp: otp,
+        },
+        { headers: { Authorization: `Bearer ${Cookies.get("access")}` } }
+      )
+      .then((res) => handleSuccessfulChange())
+      .catch((err) => handleNumberSubmitError(err));
+  };
+
+  const handleSuccessfulChange = () => {
+    setIsOTP(false);
+    setIsEdited(false);
+    toast.success("ایمیل شما با موفقیت تغییر یافت");
+  };
+
+  useEffect(() => {
+    if (focusingStep === "email") {
+      inputRef?.current?.focus();
+    }
+  }, [focusingStep]);
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+      }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Typography
+          sx={{
+            fontSize: { lg: "16px", xs: "14px" },
+            fontWeight: "400",
+            color: "text.main",
+          }}
+        >
+          ایمیل
+        </Typography>
+        <InfoButton />
+      </Box>
+      <Box sx={{ width: "70%" }}>
+        <Box
+          sx={{
+            border: "0.5px solid",
+            borderColor:
+              focusingStep === "email" ? "button.main" : "border.main",
+            borderRadius: "5px",
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            padding: "15px 10px",
+            color: "text.main",
+            fontSize: { xs: "13px", md: "14px" },
+            boxShadow:
+              focusingStep === "email"
+                ? "var(--mui-palette-button-main) 0px 0px 6px"
+                : "none",
+          }}
+        >
+          <input
+            type="tel"
+            name="mobile"
+            placeholder="ایمیل"
+            value={email}
+            onChange={handleChange}
+            onBlur={() => setFocusingStep("")}
+            ref={inputRef}
+            style={{
+              border: "none",
+              outline: "none",
+              backgroundColor: "transparent",
+              width: "100%",
+              color: "inherit",
+              fontSize: "16px",
+            }}
+          />
+          <Button
+            onClick={handleSubmit}
+            sx={{
+              color: isEdited ? "badgeText.success" : "button.main",
+              bgcolor: isEdited ? "badge.success" : "button.info",
+              minWidth: "80px",
+              ":hover": { bgcolor: isEdited ? "badge.success" : "button.info" },
+            }}
+          >
+            {isEdited ?  isOTP ? "تایید" : "ارسال کد"  : currentEmail ? "بروزرسانی" : "افزودن"}
+          </Button>
+        </Box>
+        {/* otp field */}
+        {isOTP && (
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              borderBottom: "0.5px solid",
+              borderColor: "border.secondary",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "16px",
+                fontWeight: "400",
+                color: "text.secondary",
+                mt: 2,
+                pb: 1,
+              }}
+            >
+              کد تایید را وارد کنید{" "}
+              <CountDown initialSeconds={120} onSendAgain={handleSubmit} />
+            </Typography>
+            <input
+              type="number"
+              autoFocus
+              placeholder="کد تایید"
+              value={otp}
+              onChange={(e) =>
+                e.target.value.length <= 4 && setOtp(e.target.value)
+              }
+              onKeyUp={(e) => e.code === "Enter" && handleOTPComplete()}
+              style={{
+                border: "none",
+                outline: "none",
+                background: "transparent",
+                fontSize: "16px",
+                fontWeight: "400",
+                color: "var(--mui-palette-text-secondary)",
+                direction: "ltr",
+                paddingTop: "6px",
+                letterSpacing: 2,
+                width: "60px",
+              }}
+            />
+          </Box>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default EmailInput;

@@ -1,0 +1,3 @@
+interface WalletModel {
+  balance: number;
+}
