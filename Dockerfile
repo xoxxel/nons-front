@@ -3,7 +3,7 @@ FROM node:20-alpine AS builder
 # تنظیم متغیرهای محیطی برای بهینه‌سازی بیلد
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV API="http://mock-api"
+ENV API="https://mock-api"
 ENV NEXT_PUBLIC_SITE_URL="https://nons.ir"
 # افزایش حداکثر حافظه Node.js
 ENV NODE_OPTIONS="--max-old-space-size=4096"
