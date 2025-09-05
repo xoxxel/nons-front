@@ -1,18 +1,11 @@
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
-RUN apk add --no-cache libc6-compat
-
-COPY package.json package-lock.json* ./
-RUN npm ci --omit=dev=false
-
 COPY . .
-RUN npm run build
 
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOSTNAME=0.0.0.0
+RUN npm install -g pnpm http-server
+RUN pnpm install
+RUN pnpm run build   # اینجا next export هم اجرا میشه
 
-EXPOSE 3000
-
-CMD ["npm", "run", "start"]
+EXPOSE 80
+CMD ["http-server", "out", "-p", "80"]
