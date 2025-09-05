@@ -1,11 +1,4 @@
 {
   "schemaVersion": 2,
-  "dockerfilePath": "./Dockerfile",
-  "build": {
-    "dockerIgnore": [".git", "node_modules", ".next"]
-  },
-  "run": {
-    "port": 3000,
-    "cmd": ["pnpm", "start"]
-  }
+  "dockerfilePath": "./Dockerfile"
 }

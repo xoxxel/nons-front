@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next export",
+    "test:build": "docker build -t nons-front-test .",
+    "test:run": "docker run -p 3000:3000 nons-front-test",
+    "prepare:deploy": "tar -czf ./deploy.tar.gz --exclude='node_modules' --exclude='.next' ."
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
