@@ -14,15 +14,16 @@ const nextConfig = {
       }
     ],
   },
-  // اضافه کردن تنظیمات امنیتی برای Server Actions
-  serverActions: {
-    allowedOrigins: [
-      'localhost:3000',
-      'localhost',
-      process.env.NEXT_PUBLIC_SITE_URL,
-    ],
-    allowedHeaders: ['x-forwarded-host', 'host', 'origin'],
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['nons.ir', 'localhost:3000']
+    }
   },
+  // تنظیمات محیط تولید
+  productionBrowserSourceMaps: false,
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: true
 };
 
 export default withPlaiceholder(nextConfig);
