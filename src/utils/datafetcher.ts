@@ -6,10 +6,11 @@ const apiGet = async (url: string, params?: Record<string, any>) => {
   const apiUrl = process.env.API;
   try {
     const response = await axios.get(apiUrl + url, { params });
-
     return response?.data;
   } catch (error) {
     console.error("Error fetching data:", error);
+    // مقدار پیش‌فرض برگردان تا build fail نشود
+    return null;
   }
 };
 
@@ -31,6 +32,8 @@ const apiGetByToken = async (url: string, params?: Record<string, any>) => {
       return response?.data;
     } catch (error) {
       console.error("Error fetching data:", error);
+      // مقدار پیش‌فرض برگردان تا build fail نشود
+      return null;
     }
 };
 
